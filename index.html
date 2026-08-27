@@ -3,504 +3,233 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Raksha Bandhan Interactive Celebration</title>
-
-  <!-- Canvas Confetti & html2canvas CDN -->
+  <title>Raksha Bandhan Card</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: radial-gradient(circle at center, #1a0826 0%, #0d0414 100%);
-      font-family: 'Poppins', sans-serif;
-      padding: 20px;
-      color: #333;
-      overflow-x: hidden;
-      position: relative;
+      min-height: 100vh; display: flex; justify-content: center; align-items: center;
+      background: radial-gradient(circle, #1a0826 0%, #0d0414 100%);
+      font-family: 'Poppins', sans-serif; padding: 16px; color: #333;
     }
-
-    .petal {
-      position: absolute;
-      background: rgba(255, 215, 0, 0.25);
-      border-radius: 150px 0 150px 0;
-      pointer-events: none;
-      animation: float 10s infinite linear;
+    .card {
+      background: rgba(255, 255, 255, 0.96); width: 100%; max-width: 440px;
+      padding: 24px; border-radius: 24px; text-align: center;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255, 215, 0, 0.4);
     }
-
-    @keyframes float {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0.8; }
-      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-    }
-
-    .card-container {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(16px);
-      width: 100%;
-      max-width: 480px;
-      padding: 32px;
-      border-radius: 28px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 20px rgba(252, 211, 77, 0.2);
-      text-align: center;
-      z-index: 10;
-      position: relative;
-      border: 1px solid rgba(255, 215, 0, 0.3);
-    }
-
-    h1 { font-size: 1.8rem; color: #991b1b; margin-bottom: 6px; font-weight: 700; }
-    .subtitle { font-size: 0.88rem; color: #555; margin-bottom: 20px; }
-    .form-group { margin-bottom: 14px; text-align: left; }
-    label { display: block; font-size: 0.82rem; font-weight: 600; color: #333; margin-bottom: 6px; }
-
+    h1 { font-size: 1.6rem; color: #991b1b; font-weight: 700; }
+    .subtitle { font-size: 0.85rem; color: #666; margin-bottom: 16px; }
+    .group { margin-bottom: 12px; text-align: left; }
+    label { font-size: 0.8rem; font-weight: 600; color: #444; margin-bottom: 4px; display: block; }
     input, select, textarea {
-      width: 100%;
-      padding: 11px 14px;
-      border: 2px solid #fde68a;
-      border-radius: 12px;
-      font-family: inherit;
-      font-size: 0.9rem;
-      outline: none;
-      background: #fffdf5;
+      width: 100%; padding: 10px; border: 2px solid #fde68a; border-radius: 10px;
+      font-size: 0.88rem; outline: none; background: #fffdf5;
     }
-
-    input:focus, select:focus, textarea:focus { border-color: #d97706; background: #fff; }
-
-    .toggle-group { display: flex; gap: 10px; margin-bottom: 8px; }
-    .toggle-btn {
-      flex: 1; padding: 8px; font-size: 0.8rem; font-weight: 600;
-      border: 1px solid #fde68a; background: #fffdf5; border-radius: 8px;
-      cursor: pointer; text-align: center; color: #78350f;
-    }
-    .toggle-btn.active { background: #f59e0b; color: #fff; border-color: #d97706; }
-
-    .style-picker { display: flex; justify-content: space-around; margin-top: 6px; }
-    .style-option {
-      font-size: 2rem; cursor: pointer; padding: 6px 12px;
-      border-radius: 12px; border: 2px solid transparent; transition: all 0.2s ease;
-    }
-    .style-option.selected { border-color: #d97706; background: #fffbeeb3; transform: scale(1.1); }
-
-    .rakhi-zone { margin: 25px 0; }
-    .rakhi-icon {
-      font-size: 5.5rem; cursor: pointer; display: inline-block; user-select: none;
-      filter: drop-shadow(0 10px 20px rgba(217, 119, 6, 0.4));
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .rakhi-icon:hover { transform: scale(1.2) rotate(10deg); }
-    .rakhi-hint { font-size: 0.88rem; color: #78350f; margin-top: 10px; font-weight: 600; }
-
+    .rakhi-icon { font-size: 4.8rem; cursor: pointer; display: inline-block; margin: 15px 0; }
     .message-box {
-      display: none; background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
-      border: 2px solid #f59e0b; padding: 24px; border-radius: 20px; margin-top: 20px;
-      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      display: none; background: #fffbeb; border: 2px solid #f59e0b;
+      padding: 18px; border-radius: 16px; margin-top: 15px;
     }
-
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.85); }
-      100% { opacity: 1; transform: scale(1); }
+    .scratch-wrap {
+      margin: 15px 0; border-radius: 14px; padding: 2px;
+      background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);
     }
-
-    .message-box h2 { color: #991b1b; font-size: 1.3rem; margin-bottom: 10px; }
-    .message-box p { font-size: 0.95rem; color: #374151; line-height: 1.6; white-space: pre-line; }
-
-    /* Premium Scratch Card Box */
-    .scratch-card-wrapper {
-      margin: 20px 0; border-radius: 18px; padding: 3px;
-      background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    .scratch-box { position: relative; width: 100%; height: 105px; border-radius: 12px; overflow: hidden; background: #fffdf5; }
+    .scratch-content {
+      position: absolute; width: 100%; height: 100%; display: flex;
+      flex-direction: column; justify-content: center; align-items: center; padding: 8px;
     }
-
-    .scratch-container {
-      position: relative; width: 100%; height: 120px; border-radius: 15px;
-      overflow: hidden; background: #ffffff;
-    }
-
-    .scratch-reveal-content {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      background: #fffdf5; padding: 12px; border-radius: 15px;
-    }
-    .scratch-title-badge {
-      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-      color: #92400e; background: #fef3c7; padding: 3px 10px; border-radius: 12px; margin-bottom: 6px;
-    }
-    .scratch-text { font-size: 1.05rem; font-weight: 700; color: #1e1b4b; text-align: center; }
-
-    .scratch-canvas {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      cursor: pointer; touch-action: none; transition: opacity 0.5s ease;
-    }
-
+    .badge { font-size: 0.7rem; font-weight: 700; color: #92400e; background: #fef3c7; padding: 2px 8px; border-radius: 10px; }
+    .scratch-text { font-size: 0.95rem; font-weight: 700; color: #1e1b4b; margin-top: 4px; text-align: center; }
+    canvas { position: absolute; top:0; left:0; width:100%; height:100%; cursor: pointer; touch-action: none; transition: opacity 0.4s; }
     .btn {
-      background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
-      color: white; border: none; padding: 12px 20px; border-radius: 18px;
-      font-weight: 600; cursor: pointer; transition: all 0.2s ease;
-      font-size: 0.9rem; width: 100%; margin-top: 10px;
-      display: flex; justify-content: center; align-items: center; gap: 8px;
-      box-shadow: 0 4px 12px rgba(153, 27, 27, 0.25);
+      background: #991b1b; color: white; border: none; padding: 11px; border-radius: 14px;
+      font-weight: 600; cursor: pointer; font-size: 0.88rem; width: 100%; margin-top: 8px;
     }
-    .btn-whatsapp { background: linear-gradient(135deg, #15803d 0%, #166534 100%); }
-    .btn-secondary { background: #fff; color: #991b1b; border: 2px solid #991b1b; margin-top: 10px; box-shadow: none; }
-    .btn-download { background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%); margin-top: 10px; }
-
+    .btn-wa { background: #15803d; }
+    .btn-sub { background: #fff; color: #991b1b; border: 2px solid #991b1b; }
+    .btn-dl { background: #4338ca; }
     .hidden { display: none !important; }
-    .toast { color: #15803d; font-size: 0.85rem; margin-top: 8px; font-weight: 600; }
   </style>
 </head>
 <body>
 
-  <div id="petals"></div>
-
-  <div class="card-container" id="captureArea">
+  <div class="card" id="captureArea">
     <h1>Happy Raksha Bandhan 🧵✨</h1>
-    <p class="subtitle" id="subtitle">Send a digital Rakhi & metallic scratch card!</p>
+    <p class="subtitle" id="subtitle">Send a Rakhi & demand your promise!</p>
 
     <!-- SENDER FORM -->
     <div id="senderForm">
-      <div class="form-group">
-        <label for="senderName">Your Name:</label>
-        <input type="text" id="senderName" placeholder="e.g. Rahul" />
+      <div class="group">
+        <label>Your Name (Sender):</label>
+        <input type="text" id="from" placeholder="e.g. Rahul" />
       </div>
 
-      <div class="form-group">
-        <label for="receiverName">Receiver's Name:</label>
-        <input type="text" id="receiverName" placeholder="e.g. Priya" />
+      <div class="group">
+        <label>Receiver's Name:</label>
+        <input type="text" id="to" placeholder="e.g. Priya" />
       </div>
 
-      <div class="form-group">
-        <label for="relation">Relationship Context:</label>
-        <select id="relation">
-          <option value="sibling">Brother / Sister / Sibling 👫</option>
-          <option value="partner">Partner / Wife / Husband / Girlfriend / Boyfriend ❤️</option>
-          <option value="friend">Best Friend / Mentor / Chosen Family ✨</option>
+      <div class="group">
+        <label>Select What They Owe You (The Promise) 🔒:</label>
+        <select id="reward">
+          <option value="☕ 1 Tapri Chai & Samosa Treat (On Your Expense!)">☕ 1 Tapri Chai & Samosa Treat</option>
+          <option value="🍕 Zomato/Swiggy Midnight Food Treat!">🍕 Zomato/Swiggy Midnight Food Treat</option>
+          <option value="🎟️ 1 Movie Ticket + Popcorn Treat!">🎟️ 1 Movie Ticket + Popcorn Treat</option>
+          <option value="🧹 Doing My Chores / Favors For 1 Whole Week!">🧹 Doing My Chores For 1 Week</option>
+          <option value="🤫 1 Deepest Secret Saved Forever (No Judgments!)">🤫 Keeping 1 Deep Secret Safe</option>
         </select>
       </div>
 
-      <div class="form-group">
-        <label>Choose Rakhi Design:</label>
-        <div class="style-picker">
-          <span class="style-option selected" onclick="selectStyle('🌸', this)">🌸</span>
-          <span class="style-option" onclick="selectStyle('🏵️', this)">🏵️</span>
-          <span class="style-option" onclick="selectStyle('💎', this)">💎</span>
-          <span class="style-option" onclick="selectStyle('🌺', this)">🌺</span>
-        </div>
+      <div class="group">
+        <label>Personal Note (Optional):</label>
+        <textarea id="msg" rows="2" placeholder="Write a short note..."></textarea>
       </div>
 
-      <!-- PROMISE SELECTOR / CUSTOM TOGGLE -->
-      <div class="form-group">
-        <label>My Secret Promise (On My Expense) 🔒:</label>
-        <div class="toggle-group">
-          <div class="toggle-btn active" id="btnPreset" onclick="togglePromiseMode('preset')">Pick Preset</div>
-          <div class="toggle-btn" id="btnCustom" onclick="togglePromiseMode('custom')">Custom Note</div>
-        </div>
-
-        <select id="scratchReward">
-          <option value="☕ 1 Tapri Chai & Samosa Treat (On My Expense)!">☕ Tapri Chai & Samosa Treat</option>
-          <option value="🍕 1 Swiggy/Zomato Midnight Craving (My Expense)!">🍕 Swiggy/Zomato Midnight Craving</option>
-          <option value="🎟️ 1 Movie Night + Popcorn Treat (My Expense)!">🎟️ Movie Night + Popcorn Treat</option>
-          <option value="🧹 1-Week House Chores Pass (I Do Your Work)!">🧹 1-Week House Chores Exemption</option>
-          <option value="🤫 1 Deepest Secret Saved Forever (No Judgments)!">🤫 Keep 1 Deepest Secret Safe</option>
-        </select>
-
-        <input type="text" id="customPromise" class="hidden" placeholder="Type your custom funny promise here..." />
-      </div>
-
-      <div class="form-group">
-        <label for="customMsg">Personal Letter / Note (Optional):</label>
-        <textarea id="customMsg" rows="2" placeholder="Write a heartwarming message..."></textarea>
-      </div>
-
-      <button class="btn btn-whatsapp" onclick="shareWhatsApp()">Send via WhatsApp 💬</button>
-      <button class="btn btn-secondary" onclick="copyLink()">Copy Shareable Link 🔗</button>
-      <div id="toast" class="toast hidden">Link copied to clipboard!</div>
+      <button class="btn btn-wa" onclick="shareWA()">Send via WhatsApp 💬</button>
+      <button class="btn btn-sub" onclick="copyLink()">Copy Short Link 🔗</button>
     </div>
 
     <!-- RECEIVER VIEW -->
     <div id="receiverZone" class="hidden">
-      <div class="rakhi-zone">
-        <div class="rakhi-icon" id="rakhiBtn" onclick="tieRakhi()">🌸</div>
-        <p class="rakhi-hint" id="hintText">Tap the Rakhi to tie it & open your card!</p>
-      </div>
+      <div class="rakhi-icon" id="rakhiBtn" onclick="tieRakhi()">🌸</div>
+      <p style="font-size:0.85rem; color:#78350f; font-weight:600;">Tap the Rakhi to tie it & open your scratch card!</p>
     </div>
 
     <!-- REVEALED CARD -->
     <div class="message-box" id="messageCard">
-      <h2 id="cardHeader"></h2>
-      <p id="cardBody"></p>
+      <h2 id="cardHeader" style="color:#991b1b; font-size:1.2rem; margin-bottom:6px;"></h2>
+      <p id="cardBody" style="font-size:0.9rem; color:#374151; white-space:pre-line;"></p>
 
-      <!-- Scratch Card Component -->
-      <div class="scratch-card-wrapper">
-        <div class="scratch-container" id="scratchContainer">
-          <div class="scratch-reveal-content">
-            <div class="scratch-title-badge">My Secret Promise (On My Expense) 🔒</div>
-            <div class="scratch-text" id="scratchText"></div>
+      <div class="scratch-wrap">
+        <div class="scratch-box" id="scratchContainer">
+          <div class="scratch-content">
+            <span class="badge">YOUR PROMISE TO ME 🔒</span>
+            <span class="scratch-text" id="scratchText"></span>
           </div>
-          <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
+          <canvas id="scratchCanvas"></canvas>
         </div>
       </div>
 
-      <button class="btn btn-download" id="downloadBtn" onclick="downloadCard()">Download Card Image 📸</button>
-      <button class="btn btn-secondary" id="createBtn" onclick="enableCreateMode()">Send One Back ✨</button>
+      <button class="btn btn-dl" id="dlBtn" onclick="downloadCard()">Download Card Image 📸</button>
+      <button class="btn btn-sub" id="crBtn" onclick="location.href=window.location.pathname">Send One Back ✨</button>
     </div>
   </div>
 
   <script>
-    let chosenIcon = '🌸';
-    let promiseMode = 'preset';
+    const p = new URLSearchParams(window.location.search);
+    let data = null;
 
-    // Ambient floating gold petals
-    const petalsContainer = document.getElementById('petals');
-    for (let i = 0; i < 14; i++) {
-      const petal = document.createElement('div');
-      petal.className = 'petal';
-      petal.style.width = Math.random() * 14 + 8 + 'px';
-      petal.style.height = Math.random() * 18 + 12 + 'px';
-      petal.style.left = Math.random() * 100 + 'vw';
-      petal.style.animationDuration = Math.random() * 5 + 7 + 's';
-      petal.style.animationDelay = Math.random() * 5 + 's';
-      petalsContainer.appendChild(petal);
+    if (p.get('d')) {
+      try { data = JSON.parse(atob(p.get('d'))); } catch(e){}
     }
 
-    function selectStyle(icon, el) {
-      chosenIcon = icon;
-      document.querySelectorAll('.style-option').forEach(opt => opt.classList.remove('selected'));
-      el.classList.add('selected');
-    }
-
-    function togglePromiseMode(mode) {
-      promiseMode = mode;
-      const presetSelect = document.getElementById('scratchReward');
-      const customInput = document.getElementById('customPromise');
-      const btnPreset = document.getElementById('btnPreset');
-      const btnCustom = document.getElementById('btnCustom');
-
-      if (mode === 'preset') {
-        presetSelect.classList.remove('hidden');
-        customInput.classList.add('hidden');
-        btnPreset.classList.add('active');
-        btnCustom.classList.remove('active');
-      } else {
-        presetSelect.classList.add('hidden');
-        customInput.classList.remove('hidden');
-        btnCustom.classList.add('active');
-        btnPreset.classList.remove('active');
-      }
-    }
-
-    const defaultMessages = {
-      sibling: { title: "To My Forever Support System!", text: "Thank you for always standing by me, laughing through memories, and having my back. Happy Raksha Bandhan!" },
-      partner: { title: "To My Favorite Person & Partner!", text: "This bond goes beyond standard definitions—here is to mutual care, holding space for each other, and walking side by side through life." },
-      friend: { title: "To My Chosen Family!", text: "Care and protection know no boundaries. Thank you for being someone I can always rely on!" }
-    };
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const to = urlParams.get('to');
-    const from = urlParams.get('from');
-    const rel = urlParams.get('rel') || 'sibling';
-    const iconParam = urlParams.get('icon') || '🌸';
-    const msgParam = urlParams.get('msg');
-    const rewardParam = urlParams.get('reward') || '☕ 1 Tapri Chai & Samosa Treat (On My Expense)!';
-
-    if (to && from) {
+    if (data) {
       document.getElementById('senderForm').classList.add('hidden');
       document.getElementById('receiverZone').classList.remove('hidden');
-      document.getElementById('subtitle').innerText = `Special Rakhi Greeting for ${to}!`;
-      document.getElementById('rakhiBtn').innerText = iconParam;
-      document.getElementById('scratchText').innerText = rewardParam;
+      document.getElementById('subtitle').innerText = `Special Rakhi Greeting for ${data.t || 'you'}!`;
+      document.getElementById('scratchText').innerText = data.r;
     }
 
-    function buildUrl() {
-      const sender = document.getElementById('senderName').value.trim();
-      const receiver = document.getElementById('receiverName').value.trim();
-      const relation = document.getElementById('relation').value;
-      const customMsg = document.getElementById('customMsg').value.trim();
+    function getShortUrl() {
+      const from = document.getElementById('from').value.trim();
+      const to = document.getElementById('to').value.trim();
+      const r = document.getElementById('reward').value;
+      const msg = document.getElementById('msg').value.trim();
+
+      if (!from || !to) { alert('Please enter both your name and the receiver name!'); return null; }
+
+      const payload = { f: from, t: to, r: r };
+      if (msg) payload.m = msg;
+
+      const encoded = btoa(JSON.stringify(payload));
+      return `${window.location.origin}${window.location.pathname}?d=${encoded}`;
+    }
+
+    function shareWA() {
+      const url = getShortUrl();
+      if (!url) return;
+      const from = document.getElementById('from').value.trim();
+      const to = document.getElementById('to').value.trim();
       
-      let reward = '';
-      if (promiseMode === 'preset') {
-        reward = document.getElementById('scratchReward').value;
-      } else {
-        reward = document.getElementById('customPromise').value.trim();
-        if (!reward) reward = "✨ A Special Surprise Promise (On My Expense)!";
-      }
-
-      if (!sender || !receiver) {
-        alert("Please enter both your name and the receiver's name!");
-        return null;
-      }
-
-      const baseUrl = window.location.href.split('?')[0];
-      let url = `${baseUrl}?to=${encodeURIComponent(receiver)}&from=${encodeURIComponent(sender)}&rel=${encodeURIComponent(relation)}&icon=${encodeURIComponent(chosenIcon)}&reward=${encodeURIComponent(reward)}`;
-      if (customMsg) url += `&msg=${encodeURIComponent(customMsg)}`;
-      return url;
-    }
-
-    function copyLink() {
-      const url = buildUrl();
-      if (!url) return;
-      navigator.clipboard.writeText(url).then(() => {
-        const toast = document.getElementById('toast');
-        toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), 3000);
-      });
-    }
-
-    function shareWhatsApp() {
-      const url = buildUrl();
-      if (!url) return;
-      const sender = document.getElementById('senderName').value.trim();
-      const receiver = document.getElementById('receiverName').value.trim();
-      const text = `Hey ${receiver}! 🧵✨ ${sender} sent you an interactive Raksha Bandhan greeting with a hidden scratch card. Tap here to open: ${url}`;
+      const text = `Hey ${to}! 🧵✨ ${from} sent you a Raksha Bandhan card with a secret promise you owe them!\n\nTap to tie your Rakhi & scratch: ${url}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    function playSparkleSound() {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const notes = [523.25, 659.25, 783.99, 1046.50];
-      notes.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
-        gain.gain.setValueAtTime(0.08, ctx.currentTime + idx * 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.4);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime + idx * 0.08);
-        osc.stop(ctx.currentTime + idx * 0.08 + 0.4);
-      });
+    function copyLink() {
+      const url = getShortUrl();
+      if (!url) return;
+      navigator.clipboard.writeText(url).then(() => alert('Short link copied to clipboard!'));
     }
 
-    function initScratchCard() {
+    function tieRakhi() {
+      confetti({ particleCount: 120, spread: 80 });
+      document.getElementById('cardHeader').innerText = `Dear ${data.t || 'Friend'}, Happy Raksha Bandhan! ✨`;
+      
+      const bodyText = data.m ? `"${data.m}"\n\nWith love,\n— ${data.f}` : `Thank you for always being there. Wishing you joy and happiness!\n\nWith love,\n— ${data.f}`;
+      document.getElementById('cardBody').innerText = bodyText;
+
+      document.getElementById('receiverZone').classList.add('hidden');
+      document.getElementById('messageCard').style.display = 'block';
+      initScratch();
+    }
+
+    function initScratch() {
       const canvas = document.getElementById('scratchCanvas');
       const ctx = canvas.getContext('2d');
-      const container = document.getElementById('scratchContainer');
-      
-      canvas.width = container.offsetWidth;
-      canvas.height = container.offsetHeight;
+      const box = document.getElementById('scratchContainer');
+      canvas.width = box.offsetWidth; canvas.height = box.offsetHeight;
 
-      // Draw Premium Gold Metallic Foil
       const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      grad.addColorStop(0.0, '#d4af37');
-      grad.addColorStop(0.25, '#fff6ad');
-      grad.addColorStop(0.5, '#aa771c');
-      grad.addColorStop(0.75, '#fef6ad');
-      grad.addColorStop(1.0, '#a67c1e');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      grad.addColorStop(0, '#d4af37'); grad.addColorStop(0.5, '#fff6ad'); grad.addColorStop(1, '#a67c1e');
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Fine Foil Texture Noise
-      for (let i = 0; i < 400; i++) {
-        ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.15})`;
-        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
-      }
+      ctx.font = '700 12px Poppins'; ctx.fillStyle = '#4a3701'; ctx.textAlign = 'center';
+      ctx.fillText('✨ SCRATCH HERE TO SEE WHAT YOU OWE ✨', canvas.width / 2, canvas.height / 2 + 4);
 
-      ctx.font = '700 13px Poppins';
-      ctx.fillStyle = '#4a3701';
-      ctx.textAlign = 'center';
-      ctx.fillText('✨ SCRATCH HERE WITH FINGER/MOUSE ✨', canvas.width / 2, canvas.height / 2 + 5);
-
-      let isDrawing = false;
-      let isRevealed = false;
-
-      function checkScratchPercentage() {
-        if (isRevealed) return;
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        let clearPixels = 0;
-        for (let i = 3; i < imgData.data.length; i += 4) {
-          if (imgData.data[i] === 0) clearPixels++;
-        }
-        const percentage = (clearPixels / (imgData.data.length / 4)) * 100;
-        
-        // Auto-Clear at 70% Scratch Completion
-        if (percentage >= 70) {
-          isRevealed = true;
-          canvas.style.opacity = '0';
-          setTimeout(() => { canvas.style.display = 'none'; }, 500);
-          confetti({ particleCount: 100, spread: 80, origin: { y: 0.7 } });
-        }
-      }
+      let drawing = false, done = false;
 
       function scratch(e) {
-        if (!isDrawing || isRevealed) return;
+        if (!drawing || done) return;
         const rect = canvas.getBoundingClientRect();
         const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
         const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
 
         ctx.globalCompositeOperation = 'destination-out';
-        ctx.beginPath();
-        ctx.arc(x, y, 22, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
 
-        checkScratchPercentage();
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        let clear = 0;
+        for (let i = 3; i < imgData.data.length; i += 4) if (imgData.data[i] === 0) clear++;
+        if ((clear / (imgData.data.length / 4)) > 0.7) {
+          done = true; canvas.style.opacity = '0';
+          setTimeout(() => canvas.style.display = 'none', 400);
+          confetti({ particleCount: 90 });
+        }
       }
 
-      canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
+      canvas.addEventListener('mousedown', (e) => { drawing = true; scratch(e); });
       canvas.addEventListener('mousemove', scratch);
-      canvas.addEventListener('mouseup', () => isDrawing = false);
-
-      canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+      canvas.addEventListener('mouseup', () => drawing = false);
+      canvas.addEventListener('touchstart', (e) => { drawing = true; scratch(e); });
       canvas.addEventListener('touchmove', scratch);
-      canvas.addEventListener('touchend', () => isDrawing = false);
-    }
-
-    function tieRakhi() {
-      const rakhiBtn = document.getElementById('rakhiBtn');
-      const messageCard = document.getElementById('messageCard');
-      const cardHeader = document.getElementById('cardHeader');
-      const cardBody = document.getElementById('cardBody');
-      const hintText = document.getElementById('hintText');
-
-      playSparkleSound();
-      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
-
-      rakhiBtn.style.transform = 'scale(1.4) rotate(360deg)';
-
-      const template = defaultMessages[rel] || defaultMessages.sibling;
-      cardHeader.innerText = `Dear ${to}, ${template.title}`;
-      
-      const textContent = msgParam ? msgParam : template.text;
-      cardBody.innerText = `"${textContent}"\n\nWith love,\n— ${from}`;
-
-      setTimeout(() => {
-        hintText.innerText = "✨ Rakhi Tied Successfully! ✨";
-        messageCard.style.display = 'block';
-        initScratchCard();
-      }, 400);
+      canvas.addEventListener('touchend', () => drawing = false);
     }
 
     function downloadCard() {
-      const captureElement = document.getElementById('captureArea');
-      const downloadBtn = document.getElementById('downloadBtn');
-      const createBtn = document.getElementById('createBtn');
-
-      downloadBtn.style.display = 'none';
-      createBtn.style.display = 'none';
-
-      html2canvas(captureElement, { scale: 2 }).then(canvas => {
-        const image = canvas.toDataURL('image/png');
+      document.getElementById('dlBtn').style.display = 'none';
+      document.getElementById('crBtn').style.display = 'none';
+      html2canvas(document.getElementById('captureArea'), { scale: 2 }).then(canvas => {
         const link = document.createElement('a');
-        link.href = image;
-        link.download = `Raksha_Bandhan_${to || 'Greeting'}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.download = `Rakhi_Greeting.png`;
         link.click();
-
-        downloadBtn.style.display = 'flex';
-        createBtn.style.display = 'flex';
+        document.getElementById('dlBtn').style.display = 'block';
+        document.getElementById('crBtn').style.display = 'block';
       });
-    }
-
-    function enableCreateMode() {
-      document.getElementById('receiverZone').classList.add('hidden');
-      document.getElementById('messageCard').style.display = 'none';
-      document.getElementById('senderForm').classList.remove('hidden');
-      document.getElementById('subtitle').innerText = "Send a digital Rakhi & metallic scratch card!";
-      document.getElementById('senderName').value = '';
-      document.getElementById('receiverName').value = '';
-      document.getElementById('customMsg').value = '';
     }
   </script>
 </body>
