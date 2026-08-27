@@ -194,7 +194,7 @@
 
       <!-- PROMISE SELECTOR / CUSTOM TOGGLE -->
       <div class="form-group">
-        <label>My Secret Promise (On My Expense) 🔒:</label>
+        <label>Gift / Treat I Want From You 🎁:</label>
         <div class="toggle-group">
           <div class="toggle-btn active" id="btnPreset" onclick="togglePromiseMode('preset')">Pick Preset</div>
           <div class="toggle-btn" id="btnCustom" onclick="togglePromiseMode('custom')">Custom Note</div>
@@ -238,7 +238,7 @@
       <div class="scratch-card-wrapper">
         <div class="scratch-container" id="scratchContainer">
           <div class="scratch-reveal-content">
-            <div class="scratch-title-badge">My Secret Promise (On My Expense) 🔒</div>
+            <div class="scratch-title-badge">Gift / Treat I Want From You 🎁</div>
             <div class="scratch-text" id="scratchText"></div>
           </div>
           <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
@@ -305,7 +305,7 @@
     const rel = urlParams.get('rel') || 'sibling';
     const iconParam = urlParams.get('icon') || '🌸';
     const msgParam = urlParams.get('msg');
-    const rewardParam = urlParams.get('reward') || '☕ 1 Tapri Chai & Samosa Treat (On My Expense)!';
+    const rewardParam = urlParams.get('reward') || '☕ 1 Coffee/Chai & Samosa Treat (On My Expense)!';
 
     if (to && from) {
       document.getElementById('senderForm').classList.add('hidden');
@@ -326,7 +326,7 @@
         reward = document.getElementById('scratchReward').value;
       } else {
         reward = document.getElementById('customPromise').value.trim();
-        if (!reward) reward = "✨ A Special Surprise Promise (On My Expense)!";
+        if (!reward) reward = "🎁 A Special Treat Of Your Choice!";
       }
 
       if (!sender || !receiver) {
@@ -355,7 +355,7 @@
       if (!url) return;
       const sender = document.getElementById('senderName').value.trim();
       const receiver = document.getElementById('receiverName').value.trim();
-      const text = `Hey ${receiver}! 🧵✨ ${sender} sent you an interactive Raksha Bandhan greeting with a hidden scratch card. Tap here to open: ${url}`;
+      const text = `Hey ${receiver}! 🧵✨ ${sender} tied a digital Rakhi for you with a secret gift request! Tap here to open and reveal: ${url}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
@@ -497,7 +497,7 @@
       document.getElementById('receiverZone').classList.add('hidden');
       document.getElementById('messageCard').style.display = 'none';
       document.getElementById('senderForm').classList.remove('hidden');
-      document.getElementById('subtitle').innerText = "Send a digital Rakhi & metallic scratch card!";
+      document.getElementById('subtitle').innerText = "Send a digital Rakhi & metallic scratch gift!";
       document.getElementById('senderName').value = '';
       document.getElementById('receiverName').value = '';
       document.getElementById('customMsg').value = '';
