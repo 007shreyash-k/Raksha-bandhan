@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Raksha Bandhan Digital Greeting</title>
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+      color: #333;
+    }
+
+    .card-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 480px;
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      color: #d81b60;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid #ffd1dc;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #d81b60;
+    }
+
+    .rakhi-zone {
+      margin: 25px 0;
+    }
+
+    .rakhi-icon {
+      font-size: 4.5rem;
+      cursor: pointer;
+      display: inline-block;
+      user-select: none;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .rakhi-icon:hover {
+      transform: scale(1.25) rotate(12deg);
+    }
+
+    .rakhi-hint {
+      font-size: 0.85rem;
+      color: #777;
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    .message-box {
+      display: none;
+      background: #fff0f5;
+      border: 2px dashed #ff4081;
+      padding: 20px;
+      border-radius: 16px;
+      margin-top: 20px;
+      animation: popIn 0.5s ease forwards;
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .message-box h2 {
+      color: #c2185b;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .message-box p {
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .btn {
+      background: #d81b60;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      font-size: 0.9rem;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background: #ad1457;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .toast {
+      color: #2e7d32;
+      font-size: 0.85rem;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-container">
+    <h1>Happy Raksha Bandhan 🧵✨</h1>
+    <p class="subtitle" id="subtitle">Create a personalized digital Rakhi link to share!</p>
+
+    <!-- 1. SENDER MODE: Form to create link -->
+    <div id="senderForm">
+      <div class="form-group">
+        <label for="senderName">Your Name:</label>
+        <input type="text" id="senderName" placeholder="e.g. Alex" />
+      </div>
+
+      <div class="form-group">
+        <label for="receiverName">Receiver's Name:</label>
+        <input type="text" id="receiverName" placeholder="e.g. Sam" />
+      </div>
+
+      <div class="form-group">
+        <label for="relation">Celebrating With:</label>
+        <select id="relation">
+          <option value="sibling">Sibling (Brother / Sister) 👫</option>
+          <option value="partner">Partner (Girlfriend / Husband / Wife) ❤️</option>
+          <option value="friend">Best Friend / Chosen Family ✨</option>
+        </select>
+      </div>
+
+      <button class="btn" onclick="generateLink()">Copy Shareable Link 🔗</button>
+      <div id="toast" class="toast hidden">Link copied to clipboard! Send it to them now.</div>
+    </div>
+
+    <!-- 2. RECEIVER MODE: Interactive Rakhi Section -->
+    <div id="receiverZone" class="hidden">
+      <div class="rakhi-zone">
+        <div class="rakhi-icon" id="rakhiBtn" onclick="tieRakhi()">🌸</div>
+        <p class="rakhi-hint" id="hintText">Tap the Rakhi to tie it & open your message!</p>
+      </div>
+    </div>
+
+    <!-- 3. REVEALED MESSAGE -->
+    <div class="message-box" id="messageCard">
+      <h2 id="cardHeader"></h2>
+      <p id="cardBody"></p>
+    </div>
+  </div>
+
+  <script>
+    const defaultMessages = {
+      sibling: {
+        title: "To My Forever Partner-in-Crime!",
+        text: "Thanks for having my back through thick and thin. Wishing you all the joy, love, and protection today!"
+      },
+      partner: {
+        title: "To My Favorite Person!",
+        text: "This bond goes beyond definitions—here is to mutual care, holding space for each other, and walking side by side through life."
+      },
+      friend: {
+        title: "To My Chosen Family!",
+        text: "Distance or blood doesn't limit family. Thank you for always being there for me when it matters most!"
+      }
+    };
+
+    // Parse URL parameters to check if a receiver opened the link
+    const urlParams = new URLSearchParams(window.location.search);
+    const to = urlParams.get('to');
+    const from = urlParams.get('from');
+    const rel = urlParams.get('rel') || 'sibling';
+
+    // If 'to' and 'from' parameters exist, switch to RECEIVER MODE
+    if (to && from) {
+      document.getElementById('senderForm').classList.add('hidden');
+      document.getElementById('receiverZone').classList.remove('hidden');
+      document.getElementById('subtitle').innerText = `Special Rakhi Greeting for ${to}!`;
+    }
+
+    function generateLink() {
+      const sender = document.getElementById('senderName').value.trim();
+      const receiver = document.getElementById('receiverName').value.trim();
+      const relation = document.getElementById('relation').value;
+
+      if (!sender || !receiver) {
+        alert("Please enter both your name and the receiver's name!");
+        return;
+      }
+
+      // Create unique URL containing user input
+      const baseUrl = window.location.origin + window.location.pathname;
+      const shareableUrl = `${baseUrl}?to=${encodeURIComponent(receiver)}&from=${encodeURIComponent(sender)}&rel=${encodeURIComponent(relation)}`;
+
+      // Copy link to clipboard
+      navigator.clipboard.writeText(shareableUrl).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 4000);
+      });
+    }
+
+    function tieRakhi() {
+      const rakhiBtn = document.getElementById('rakhiBtn');
+      const messageCard = document.getElementById('messageCard');
+      const cardHeader = document.getElementById('cardHeader');
+      const cardBody = document.getElementById('cardBody');
+      const hintText = document.getElementById('hintText');
+
+      // Trigger Confetti Blast
+      confetti({
+        particleCount: 130,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+
+      // Animate Rakhi icon
+      rakhiBtn.style.transform = 'scale(1.4) rotate(360deg)';
+
+      // Populate unique receiver message
+      const template = defaultMessages[rel] || defaultMessages.sibling;
+      cardHeader.innerText = `Dear ${to}, ${template.title}`;
+      cardBody.innerText = `"${template.text}"\n\nWith love,\n— ${from}`;
+
+      // Update UI displays
+      setTimeout(() => {
+        hintText.innerText = "✨ Rakhi Tied Successfully! ✨";
+        messageCard.style.display = 'block';
+      }, 400);
+    }
+  </script>
+</body>
+</html>
