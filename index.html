@@ -147,6 +147,17 @@
       background: #ad1457;
     }
 
+    .btn-secondary {
+      background: #fff;
+      color: #d81b60;
+      border: 2px solid #d81b60;
+      margin-top: 15px;
+    }
+
+    .btn-secondary:hover {
+      background: #fff0f5;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -202,6 +213,9 @@
     <div class="message-box" id="messageCard">
       <h2 id="cardHeader"></h2>
       <p id="cardBody"></p>
+      
+      <!-- New Button to Create Their Own Greeting -->
+      <button class="btn btn-secondary" onclick="enableCreateMode()">Want to send one to someone else? Click Here ✨</button>
     </div>
   </div>
 
@@ -221,13 +235,11 @@
       }
     };
 
-    // Parse URL parameters to check if a receiver opened the link
     const urlParams = new URLSearchParams(window.location.search);
     const to = urlParams.get('to');
     const from = urlParams.get('from');
     const rel = urlParams.get('rel') || 'sibling';
 
-    // If 'to' and 'from' parameters exist, switch to RECEIVER MODE
     if (to && from) {
       document.getElementById('senderForm').classList.add('hidden');
       document.getElementById('receiverZone').classList.remove('hidden');
@@ -244,11 +256,9 @@
         return;
       }
 
-      // Create unique URL containing user input
-      const baseUrl = window.location.origin + window.location.pathname;
+      const baseUrl = window.location.href.split('?')[0];
       const shareableUrl = `${baseUrl}?to=${encodeURIComponent(receiver)}&from=${encodeURIComponent(sender)}&rel=${encodeURIComponent(relation)}`;
 
-      // Copy link to clipboard
       navigator.clipboard.writeText(shareableUrl).then(() => {
         const toast = document.getElementById('toast');
         toast.classList.remove('hidden');
@@ -263,26 +273,34 @@
       const cardBody = document.getElementById('cardBody');
       const hintText = document.getElementById('hintText');
 
-      // Trigger Confetti Blast
       confetti({
         particleCount: 130,
         spread: 80,
         origin: { y: 0.6 }
       });
 
-      // Animate Rakhi icon
       rakhiBtn.style.transform = 'scale(1.4) rotate(360deg)';
 
-      // Populate unique receiver message
       const template = defaultMessages[rel] || defaultMessages.sibling;
       cardHeader.innerText = `Dear ${to}, ${template.title}`;
       cardBody.innerText = `"${template.text}"\n\nWith love,\n— ${from}`;
 
-      // Update UI displays
       setTimeout(() => {
         hintText.innerText = "✨ Rakhi Tied Successfully! ✨";
         messageCard.style.display = 'block';
       }, 400);
+    }
+
+    function enableCreateMode() {
+      // Hide receiver view and message, show generator form
+      document.getElementById('receiverZone').classList.add('hidden');
+      document.getElementById('messageCard').style.display = 'none';
+      document.getElementById('senderForm').classList.remove('hidden');
+      document.getElementById('subtitle').innerText = "Create a personalized digital Rakhi link to share!";
+      
+      // Clear previous input fields
+      document.getElementById('senderName').value = '';
+      document.getElementById('receiverName').value = '';
     }
   </script>
 </body>
