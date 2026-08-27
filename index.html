@@ -3,90 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Raksha Bandhan Card</title>
+  <title>Happy Raksha Bandhan 🧵✨</title>
+  
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      min-height: 100vh; display: flex; justify-content: center; align-items: center;
-      background: radial-gradient(circle, #1a0826 0%, #0d0414 100%);
-      font-family: 'Poppins', sans-serif; padding: 16px; color: #333;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #1a0826 0%, #0d0414 100%);
+      font-family: 'Poppins', sans-serif;
+      padding: 16px;
+      color: #333;
+      overflow-x: hidden;
+      position: relative;
     }
-    .card {
-      background: rgba(255, 255, 255, 0.96); width: 100%; max-width: 440px;
-      padding: 24px; border-radius: 24px; text-align: center;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255, 215, 0, 0.4);
+
+    /* Background Floating Petals */
+    .petal {
+      position: absolute;
+      background: rgba(255, 215, 0, 0.25);
+      border-radius: 150px 0 150px 0;
+      pointer-events: none;
+      animation: float 10s infinite linear;
     }
-    h1 { font-size: 1.6rem; color: #991b1b; font-weight: 700; }
-    .subtitle { font-size: 0.85rem; color: #666; margin-bottom: 16px; }
-    .group { margin-bottom: 12px; text-align: left; }
-    label { font-size: 0.8rem; font-weight: 600; color: #444; margin-bottom: 4px; display: block; }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .card-container {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      width: 100%;
+      max-width: 450px;
+      padding: 28px;
+      border-radius: 26px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 20px rgba(252, 211, 77, 0.2);
+      text-align: center;
+      z-index: 10;
+      position: relative;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    h1 { font-size: 1.7rem; color: #991b1b; font-weight: 700; margin-bottom: 4px; }
+    .subtitle { font-size: 0.85rem; color: #555; margin-bottom: 18px; }
+
+    .form-group { margin-bottom: 12px; text-align: left; }
+    label { font-size: 0.8rem; font-weight: 600; color: #333; margin-bottom: 4px; display: block; }
+    
     input, select, textarea {
-      width: 100%; padding: 10px; border: 2px solid #fde68a; border-radius: 10px;
-      font-size: 0.88rem; outline: none; background: #fffdf5;
+      width: 100%; padding: 10px 12px; border: 2px solid #fde68a; border-radius: 10px;
+      font-size: 0.88rem; outline: none; background: #fffdf5; font-family: inherit;
     }
-    .rakhi-icon { font-size: 4.8rem; cursor: pointer; display: inline-block; margin: 15px 0; }
+    input:focus, select:focus, textarea:focus { border-color: #d97706; background: #fff; }
+
+    /* Rakhi Style Picker */
+    .style-picker { display: flex; justify-content: space-around; margin-top: 6px; }
+    .style-option {
+      font-size: 2rem; cursor: pointer; padding: 4px 10px;
+      border-radius: 12px; border: 2px solid transparent; transition: all 0.2s ease;
+    }
+    .style-option.selected { border-color: #d97706; background: #fffbeeb3; transform: scale(1.15); }
+
+    .rakhi-zone { margin: 20px 0; }
+    .rakhi-icon {
+      font-size: 5.2rem; cursor: pointer; display: inline-block; user-select: none;
+      filter: drop-shadow(0 10px 18px rgba(217, 119, 6, 0.4));
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .rakhi-icon:hover { transform: scale(1.2) rotate(12deg); }
+    .rakhi-hint { font-size: 0.85rem; color: #78350f; margin-top: 8px; font-weight: 600; }
+
     .message-box {
-      display: none; background: #fffbeb; border: 2px solid #f59e0b;
-      padding: 18px; border-radius: 16px; margin-top: 15px;
+      display: none; background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
+      border: 2px solid #f59e0b; padding: 20px; border-radius: 18px; margin-top: 15px;
+      animation: popIn 0.4s ease forwards;
     }
-    .scratch-wrap {
-      margin: 15px 0; border-radius: 14px; padding: 2px;
-      background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728);
+    @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+
+    /* Metallic Scratch Wrapper */
+    .scratch-card-wrapper {
+      margin: 16px 0; border-radius: 16px; padding: 2px;
+      background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
-    .scratch-box { position: relative; width: 100%; height: 105px; border-radius: 12px; overflow: hidden; background: #fffdf5; }
-    .scratch-content {
-      position: absolute; width: 100%; height: 100%; display: flex;
-      flex-direction: column; justify-content: center; align-items: center; padding: 8px;
+    .scratch-container { position: relative; width: 100%; height: 110px; border-radius: 14px; overflow: hidden; background: #fffdf5; }
+    .scratch-reveal-content {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px;
     }
-    .badge { font-size: 0.7rem; font-weight: 700; color: #92400e; background: #fef3c7; padding: 2px 8px; border-radius: 10px; }
-    .scratch-text { font-size: 0.95rem; font-weight: 700; color: #1e1b4b; margin-top: 4px; text-align: center; }
-    canvas { position: absolute; top:0; left:0; width:100%; height:100%; cursor: pointer; touch-action: none; transition: opacity 0.4s; }
+    .scratch-badge {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #92400e; background: #fef3c7; padding: 2px 8px; border-radius: 10px; margin-bottom: 4px;
+    }
+    .scratch-text { font-size: 0.98rem; font-weight: 700; color: #1e1b4b; text-align: center; }
+    .scratch-canvas { position: absolute; top:0; left:0; width:100%; height:100%; cursor: pointer; touch-action: none; transition: opacity 0.4s; }
+
     .btn {
-      background: #991b1b; color: white; border: none; padding: 11px; border-radius: 14px;
+      background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+      color: white; border: none; padding: 11px; border-radius: 14px;
       font-weight: 600; cursor: pointer; font-size: 0.88rem; width: 100%; margin-top: 8px;
     }
-    .btn-wa { background: #15803d; }
+    .btn-wa { background: linear-gradient(135deg, #15803d 0%, #166534 100%); }
     .btn-sub { background: #fff; color: #991b1b; border: 2px solid #991b1b; }
-    .btn-dl { background: #4338ca; }
+    .btn-dl { background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%); }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <div class="card" id="captureArea">
+  <div id="petals"></div>
+
+  <div class="card-container" id="captureArea">
     <h1>Happy Raksha Bandhan 🧵✨</h1>
     <p class="subtitle" id="subtitle">Send a Rakhi & demand your promise!</p>
 
     <!-- SENDER FORM -->
     <div id="senderForm">
-      <div class="group">
+      <div class="form-group">
         <label>Your Name (Sender):</label>
         <input type="text" id="from" placeholder="e.g. Rahul" />
       </div>
 
-      <div class="group">
+      <div class="form-group">
         <label>Receiver's Name:</label>
         <input type="text" id="to" placeholder="e.g. Priya" />
       </div>
 
-      <div class="group">
-        <label>Select What They Owe You (The Promise) 🔒:</label>
+      <div class="form-group">
+        <label>Relationship Context:</label>
+        <select id="rel">
+          <option value="sibling">Brother / Sister / Sibling 👫</option>
+          <option value="partner">Partner / Wife / Husband / Girlfriend / Boyfriend ❤️</option>
+          <option value="friend">Best Friend / Chosen Family ✨</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Choose Rakhi Design:</label>
+        <div class="style-picker">
+          <span class="style-option selected" onclick="selectStyle('🌸', this)">🌸</span>
+          <span class="style-option" onclick="selectStyle('🏵️', this)">🏵️</span>
+          <span class="style-option" onclick="selectStyle('💎', this)">💎</span>
+          <span class="style-option" onclick="selectStyle('🌺', this)">🌺</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>What They Owe You (The Promise) 🔒:</label>
         <select id="reward">
           <option value="☕ 1 Tapri Chai & Samosa Treat (On Your Expense!)">☕ 1 Tapri Chai & Samosa Treat</option>
           <option value="🍕 Zomato/Swiggy Midnight Food Treat!">🍕 Zomato/Swiggy Midnight Food Treat</option>
           <option value="🎟️ 1 Movie Ticket + Popcorn Treat!">🎟️ 1 Movie Ticket + Popcorn Treat</option>
           <option value="🧹 Doing My Chores / Favors For 1 Whole Week!">🧹 Doing My Chores For 1 Week</option>
-          <option value="🤫 1 Deepest Secret Saved Forever (No Judgments!)">🤫 Keeping 1 Deep Secret Safe</option>
+          <option value="🤫 Keeping 1 Deepest Secret Safe (No Judgments!)">🤫 Keeping 1 Deep Secret Safe</option>
         </select>
       </div>
 
-      <div class="group">
-        <label>Personal Note (Optional):</label>
-        <textarea id="msg" rows="2" placeholder="Write a short note..."></textarea>
+      <div class="form-group">
+        <label>Personal Message (Optional):</label>
+        <textarea id="msg" rows="2" placeholder="Write a short message..."></textarea>
       </div>
 
       <button class="btn btn-wa" onclick="shareWA()">Send via WhatsApp 💬</button>
@@ -95,8 +179,10 @@
 
     <!-- RECEIVER VIEW -->
     <div id="receiverZone" class="hidden">
-      <div class="rakhi-icon" id="rakhiBtn" onclick="tieRakhi()">🌸</div>
-      <p style="font-size:0.85rem; color:#78350f; font-weight:600;">Tap the Rakhi to tie it & open your scratch card!</p>
+      <div class="rakhi-zone">
+        <div class="rakhi-icon" id="rakhiBtn" onclick="tieRakhi()">🌸</div>
+        <p class="rakhi-hint" id="hintText">Tap the Rakhi to tie it & open your scratch card!</p>
+      </div>
     </div>
 
     <!-- REVEALED CARD -->
@@ -104,13 +190,13 @@
       <h2 id="cardHeader" style="color:#991b1b; font-size:1.2rem; margin-bottom:6px;"></h2>
       <p id="cardBody" style="font-size:0.9rem; color:#374151; white-space:pre-line;"></p>
 
-      <div class="scratch-wrap">
-        <div class="scratch-box" id="scratchContainer">
-          <div class="scratch-content">
-            <span class="badge">YOUR PROMISE TO ME 🔒</span>
+      <div class="scratch-card-wrapper">
+        <div class="scratch-container" id="scratchContainer">
+          <div class="scratch-reveal-content">
+            <span class="scratch-badge">YOUR PROMISE TO ME 🔒</span>
             <span class="scratch-text" id="scratchText"></span>
           </div>
-          <canvas id="scratchCanvas"></canvas>
+          <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
         </div>
       </div>
 
@@ -120,6 +206,33 @@
   </div>
 
   <script>
+    let chosenIcon = '🌸';
+
+    // Generate Background Floating Petals
+    const petalsContainer = document.getElementById('petals');
+    for (let i = 0; i < 12; i++) {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      petal.style.width = Math.random() * 12 + 8 + 'px';
+      petal.style.height = Math.random() * 16 + 10 + 'px';
+      petal.style.left = Math.random() * 100 + 'vw';
+      petal.style.animationDuration = Math.random() * 5 + 7 + 's';
+      petal.style.animationDelay = Math.random() * 5 + 's';
+      petalsContainer.appendChild(petal);
+    }
+
+    function selectStyle(icon, el) {
+      chosenIcon = icon;
+      document.querySelectorAll('.style-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    const defaultMessages = {
+      sibling: "Thank you for always standing by me, laughing through memories, and having my back.",
+      partner: "This bond goes beyond standard definitions—here is to mutual care and walking side by side.",
+      friend: "Care and protection know no boundaries. Thank you for being someone I can always rely on!"
+    };
+
     const p = new URLSearchParams(window.location.search);
     let data = null;
 
@@ -131,18 +244,20 @@
       document.getElementById('senderForm').classList.add('hidden');
       document.getElementById('receiverZone').classList.remove('hidden');
       document.getElementById('subtitle').innerText = `Special Rakhi Greeting for ${data.t || 'you'}!`;
+      document.getElementById('rakhiBtn').innerText = data.i || '🌸';
       document.getElementById('scratchText').innerText = data.r;
     }
 
     function getShortUrl() {
       const from = document.getElementById('from').value.trim();
       const to = document.getElementById('to').value.trim();
+      const rel = document.getElementById('rel').value;
       const r = document.getElementById('reward').value;
       const msg = document.getElementById('msg').value.trim();
 
       if (!from || !to) { alert('Please enter both your name and the receiver name!'); return null; }
 
-      const payload = { f: from, t: to, r: r };
+      const payload = { f: from, t: to, rel: rel, i: chosenIcon, r: r };
       if (msg) payload.m = msg;
 
       const encoded = btoa(JSON.stringify(payload));
@@ -154,7 +269,6 @@
       if (!url) return;
       const from = document.getElementById('from').value.trim();
       const to = document.getElementById('to').value.trim();
-      
       const text = `Hey ${to}! 🧵✨ ${from} sent you a Raksha Bandhan card with a secret promise you owe them!\n\nTap to tie your Rakhi & scratch: ${url}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
@@ -169,8 +283,9 @@
       confetti({ particleCount: 120, spread: 80 });
       document.getElementById('cardHeader').innerText = `Dear ${data.t || 'Friend'}, Happy Raksha Bandhan! ✨`;
       
-      const bodyText = data.m ? `"${data.m}"\n\nWith love,\n— ${data.f}` : `Thank you for always being there. Wishing you joy and happiness!\n\nWith love,\n— ${data.f}`;
-      document.getElementById('cardBody').innerText = bodyText;
+      const baseNote = defaultMessages[data.rel] || defaultMessages.sibling;
+      const textContent = data.m ? data.m : baseNote;
+      document.getElementById('cardBody').innerText = `"${textContent}"\n\nWith love,\n— ${data.f}`;
 
       document.getElementById('receiverZone').classList.add('hidden');
       document.getElementById('messageCard').style.display = 'block';
@@ -184,11 +299,11 @@
       canvas.width = box.offsetWidth; canvas.height = box.offsetHeight;
 
       const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      grad.addColorStop(0, '#d4af37'); grad.addColorStop(0.5, '#fff6ad'); grad.addColorStop(1, '#a67c1e');
+      grad.addColorStop(0, '#d4af37'); grad.addColorStop(0.3, '#fff6ad'); grad.addColorStop(0.7, '#aa771c'); grad.addColorStop(1, '#a67c1e');
       ctx.fillStyle = grad; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.font = '700 12px Poppins'; ctx.fillStyle = '#4a3701'; ctx.textAlign = 'center';
-      ctx.fillText('✨ SCRATCH HERE TO SEE WHAT YOU OWE ✨', canvas.width / 2, canvas.height / 2 + 4);
+      ctx.fillText('✨ SCRATCH HERE TO REVEAL ✨', canvas.width / 2, canvas.height / 2 + 4);
 
       let drawing = false, done = false;
 
