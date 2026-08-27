@@ -123,8 +123,8 @@
     .btn-wa { background: linear-gradient(135deg, #15803d 0%, #166534 100%); }
     .btn-sub { background: #ffffff; color: #991b1b; border: 2px solid #991b1b; }
     .btn-dl { background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%); }
+    .btn-prev { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); }
 
-    /* Copy Feedback Banner */
     .toast-banner {
       display: none; background: #166534; color: #fff; padding: 8px;
       border-radius: 8px; font-size: 0.8rem; font-weight: 600; margin-top: 8px;
@@ -145,12 +145,12 @@
     <div id="senderForm">
       <div class="form-group">
         <label>Your Name (Sender):</label>
-        <input type="text" id="from" placeholder="e.g. Rahul" />
+        <input type="text" id="from" placeholder="e.g. Rahul" value="Rahul" />
       </div>
 
       <div class="form-group">
         <label>Receiver's Name:</label>
-        <input type="text" id="to" placeholder="e.g. Priya" />
+        <input type="text" id="to" placeholder="e.g. Priya" value="Priya" />
       </div>
 
       <div class="form-group">
@@ -194,8 +194,9 @@
         <textarea id="msg" rows="2" placeholder="Write a custom note..."></textarea>
       </div>
 
-      <button class="btn btn-wa" id="waBtn" onclick="shareWA()">Send via WhatsApp 💬</button>
-      <button class="btn btn-sub" id="copyBtn" onclick="copyLink()">Copy Short Link 🔗</button>
+      <button class="btn btn-wa" onclick="shareWA()">Send via WhatsApp 💬</button>
+      <button class="btn btn-sub" onclick="copyLink()">Copy Short Link 🔗</button>
+      <button class="btn btn-prev" onclick="previewReceiverView()">Preview Output Screen 👁️</button>
       <div class="toast-banner" id="toast">✅ Link Copied to Clipboard!</div>
     </div>
 
@@ -264,14 +265,30 @@
       friend: "Care and protection know no boundaries. Thank you for being someone I can always rely on!"
     };
 
+    // Safe Encoding/Decoding for UTF-8 (Emoji & Special Characters)
+    function encodePayload(obj) {
+      const str = JSON.stringify(obj);
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
+    }
+
+    function decodePayload(str) {
+      const decodedStr = decodeURIComponent(Array.prototype.map.call(atob(str), c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      return JSON.parse(decodedStr);
+    }
+
     const p = new URLSearchParams(window.location.search);
     let data = null;
 
     if (p.get('d')) {
-      try { data = JSON.parse(atob(p.get('d'))); } catch(e) { console.error(e); }
+      try { data = decodePayload(p.get('d')); } catch(e) { console.error("URL Load Error:", e); }
     }
 
     if (data) {
+      setupReceiverView(data);
+    }
+
+    function setupReceiverView(payloadData) {
+      data = payloadData;
       document.getElementById('senderForm').classList.add('hidden');
       document.getElementById('receiverZone').classList.remove('hidden');
       document.getElementById('subtitle').innerText = `Special Rakhi Greeting for ${data.t || 'you'}!`;
@@ -303,8 +320,9 @@
       const payload = { f: from, t: to, rel: rel, i: chosenIcon, r: r };
       if (msg) payload.m = msg;
 
-      const encoded = btoa(JSON.stringify(payload));
-      return `${window.location.origin}${window.location.pathname}?d=${encoded}`;
+      const encoded = encodePayload(payload);
+      const baseUrl = window.location.href.split('?')[0];
+      return `${baseUrl}?d=${encoded}`;
     }
 
     function shareWA() {
@@ -314,26 +332,36 @@
       const to = document.getElementById('to').value.trim();
       
       const message = `Hey ${to}! 🧵✨ ${from} sent you a Raksha Bandhan card with a secret promise you owe them!\n\nTap to tie your Rakhi & scratch: ${url}`;
-      const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-      
-      window.location.href = waUrl;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
     }
 
     function copyLink() {
       const url = getShortUrl();
       if (!url) return;
 
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(url).then(showToast);
-      } else {
-        const tempInput = document.createElement("input");
-        tempInput.value = url;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand("copy");
-        document.body.removeChild(tempInput);
-        showToast();
+      const tempInput = document.createElement("textarea");
+      tempInput.value = url;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+      
+      showToast();
+    }
+
+    function previewReceiverView() {
+      const from = document.getElementById('from').value.trim();
+      const to = document.getElementById('to').value.trim();
+      const rel = document.getElementById('rel').value;
+      const r = getSelectedPromise();
+      const msg = document.getElementById('msg').value.trim();
+
+      if (!from || !to) { 
+        alert('Please enter both your name and the receiver name to preview!'); 
+        return; 
       }
+
+      setupReceiverView({ f: from, t: to, rel: rel, i: chosenIcon, r: r, m: msg });
     }
 
     function showToast() {
