@@ -250,7 +250,7 @@
       transition: opacity 0.4s;
     }
 
-    /* Buttons */
+    /* Action Buttons */
     .btn {
       background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
       color: white;
@@ -262,6 +262,7 @@
       font-size: 0.88rem;
       width: 100%;
       margin-top: 8px;
+      display: block;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -298,7 +299,7 @@
     <h1>Happy Raksha Bandhan 🧵✨</h1>
     <p class="subtitle" id="subtitle">Send a digital Rakhi & scratch card!</p>
 
-    <!-- SENDER FORM -->
+    <!-- SENDER FORM (ALWAYS VISIBLE FOR SENDER) -->
     <div id="senderForm">
       <div class="form-group">
         <label>Your Name (Sender):</label>
@@ -345,11 +346,11 @@
         <textarea id="msg" rows="2" placeholder="Write a custom note..."></textarea>
       </div>
 
-      <button class="btn btn-wa" onclick="shareWA()">Send via WhatsApp 💬</button>
-      <button class="btn btn-sub" onclick="copyLink()">Copy Short Link 🔗</button>
+      <button class="btn btn-wa" id="waBtn" onclick="shareWA()">Send via WhatsApp 💬</button>
+      <button class="btn btn-sub" id="copyBtn" onclick="copyLink()">Copy Short Link 🔗</button>
     </div>
 
-    <!-- RECEIVER VIEW -->
+    <!-- RECEIVER VIEW (HIDDEN FOR SENDER BY DEFAULT) -->
     <div id="receiverZone" class="hidden">
       <div class="rakhi-zone">
         <div class="rakhi-icon" id="rakhiBtn" onclick="tieRakhi()">🌸</div>
@@ -410,15 +411,21 @@
     let data = null;
 
     if (p.get('d')) {
-      try { data = JSON.parse(atob(p.get('d'))); } catch(e){}
+      try { 
+        data = JSON.parse(atob(p.get('d'))); 
+      } catch(e) { console.error("Invalid URL payload", e); }
     }
 
+    // Toggle between Sender View and Receiver View
     if (data) {
       document.getElementById('senderForm').classList.add('hidden');
       document.getElementById('receiverZone').classList.remove('hidden');
       document.getElementById('subtitle').innerText = `Special Rakhi Greeting for ${data.t || 'you'}!`;
       document.getElementById('rakhiBtn').innerText = data.i || '🌸';
       document.getElementById('scratchText').innerText = data.r;
+    } else {
+      document.getElementById('senderForm').classList.remove('hidden');
+      document.getElementById('receiverZone').classList.add('hidden');
     }
 
     function getShortUrl() {
@@ -428,7 +435,10 @@
       const r = document.getElementById('reward').value;
       const msg = document.getElementById('msg').value.trim();
 
-      if (!from || !to) { alert('Please enter both your name and the receiver name!'); return null; }
+      if (!from || !to) { 
+        alert('Please enter both your name and the receiver name!'); 
+        return null; 
+      }
 
       const payload = { f: from, t: to, rel: rel, i: chosenIcon, r: r };
       if (msg) payload.m = msg;
