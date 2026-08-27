@@ -11,11 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
@@ -39,30 +35,10 @@
       text-align: center;
     }
 
-    h1 {
-      font-size: 1.8rem;
-      color: #d81b60;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      font-size: 0.9rem;
-      color: #666;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-      text-align: left;
-    }
-
-    label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #444;
-      margin-bottom: 5px;
-    }
+    h1 { font-size: 1.8rem; color: #d81b60; margin-bottom: 8px; }
+    .subtitle { font-size: 0.9rem; color: #666; margin-bottom: 20px; }
+    .form-group { margin-bottom: 15px; text-align: left; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; color: #444; margin-bottom: 5px; }
 
     input, select {
       width: 100%;
@@ -74,14 +50,9 @@
       outline: none;
     }
 
-    input:focus, select:focus {
-      border-color: #d81b60;
-    }
+    input:focus, select:focus { border-color: #d81b60; }
 
-    .rakhi-zone {
-      margin: 25px 0;
-    }
-
+    .rakhi-zone { margin: 25px 0; }
     .rakhi-icon {
       font-size: 4.5rem;
       cursor: pointer;
@@ -89,17 +60,8 @@
       user-select: none;
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-
-    .rakhi-icon:hover {
-      transform: scale(1.25) rotate(12deg);
-    }
-
-    .rakhi-hint {
-      font-size: 0.85rem;
-      color: #777;
-      margin-top: 5px;
-      font-weight: 500;
-    }
+    .rakhi-icon:hover { transform: scale(1.25) rotate(12deg); }
+    .rakhi-hint { font-size: 0.85rem; color: #777; margin-top: 5px; font-weight: 500; }
 
     .message-box {
       display: none;
@@ -116,18 +78,8 @@
       100% { opacity: 1; transform: scale(1); }
     }
 
-    .message-box h2 {
-      color: #c2185b;
-      font-size: 1.3rem;
-      margin-bottom: 8px;
-    }
-
-    .message-box p {
-      font-size: 0.95rem;
-      color: #444;
-      line-height: 1.5;
-      white-space: pre-line;
-    }
+    .message-box h2 { color: #c2185b; font-size: 1.3rem; margin-bottom: 8px; }
+    .message-box p { font-size: 0.95rem; color: #444; line-height: 1.5; white-space: pre-line; }
 
     .btn {
       background: #d81b60;
@@ -141,11 +93,15 @@
       font-size: 0.9rem;
       width: 100%;
       margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
     }
+    .btn:hover { background: #ad1457; }
 
-    .btn:hover {
-      background: #ad1457;
-    }
+    .btn-whatsapp { background: #25D366; }
+    .btn-whatsapp:hover { background: #1da851; }
 
     .btn-secondary {
       background: #fff;
@@ -153,30 +109,19 @@
       border: 2px solid #d81b60;
       margin-top: 15px;
     }
+    .btn-secondary:hover { background: #fff0f5; }
 
-    .btn-secondary:hover {
-      background: #fff0f5;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .toast {
-      color: #2e7d32;
-      font-size: 0.85rem;
-      margin-top: 8px;
-      font-weight: 600;
-    }
+    .hidden { display: none !important; }
+    .toast { color: #2e7d32; font-size: 0.85rem; margin-top: 8px; font-weight: 600; }
   </style>
 </head>
 <body>
 
   <div class="card-container">
     <h1>Happy Raksha Bandhan 🧵✨</h1>
-    <p class="subtitle" id="subtitle">Create a personalized digital Rakhi link to share!</p>
+    <p class="subtitle" id="subtitle">Send a digital Rakhi & personalized message to anyone!</p>
 
-    <!-- 1. SENDER MODE: Form to create link -->
+    <!-- SENDER MODE -->
     <div id="senderForm">
       <div class="form-group">
         <label for="senderName">Your Name:</label>
@@ -191,47 +136,47 @@
       <div class="form-group">
         <label for="relation">Celebrating With:</label>
         <select id="relation">
-          <option value="sibling">Sibling (Brother / Sister) 👫</option>
-          <option value="partner">Partner (Girlfriend / Husband / Wife) ❤️</option>
-          <option value="friend">Best Friend / Chosen Family ✨</option>
+          <option value="sibling">Brother / Sister / Sibling 👫</option>
+          <option value="partner">Partner / Wife / Husband / Girlfriend / Boyfriend ❤️</option>
+          <option value="friend">Best Friend / Mentor / Family ✨</option>
         </select>
       </div>
 
-      <button class="btn" onclick="generateLink()">Copy Shareable Link 🔗</button>
-      <div id="toast" class="toast hidden">Link copied to clipboard! Send it to them now.</div>
+      <button class="btn btn-whatsapp" onclick="shareWhatsApp()">Send via WhatsApp 💬</button>
+      <button class="btn btn-secondary" onclick="copyLink()">Copy Shareable Link 🔗</button>
+      <div id="toast" class="toast hidden">Link copied to clipboard!</div>
     </div>
 
-    <!-- 2. RECEIVER MODE: Interactive Rakhi Section -->
+    <!-- RECEIVER MODE -->
     <div id="receiverZone" class="hidden">
       <div class="rakhi-zone">
         <div class="rakhi-icon" id="rakhiBtn" onclick="tieRakhi()">🌸</div>
-        <p class="rakhi-hint" id="hintText">Tap the Rakhi to tie it & open your message!</p>
+        <p class="rakhi-hint" id="hintText">Tap the Rakhi to tie it & reveal your card!</p>
       </div>
     </div>
 
-    <!-- 3. REVEALED MESSAGE -->
+    <!-- REVEALED MESSAGE -->
     <div class="message-box" id="messageCard">
       <h2 id="cardHeader"></h2>
       <p id="cardBody"></p>
       
-      <!-- New Button to Create Their Own Greeting -->
-      <button class="btn btn-secondary" onclick="enableCreateMode()">Want to send one to someone else? Click Here ✨</button>
+      <button class="btn btn-secondary" onclick="enableCreateMode()">Want to send one back or to someone else? Click Here ✨</button>
     </div>
   </div>
 
   <script>
     const defaultMessages = {
       sibling: {
-        title: "To My Forever Partner-in-Crime!",
-        text: "Thanks for having my back through thick and thin. Wishing you all the joy, love, and protection today!"
+        title: "To My Forever Support System!",
+        text: "Thank you for always standing by me, laughing through the memories, and having my back. Wishing you endless happiness today!"
       },
       partner: {
-        title: "To My Favorite Person!",
-        text: "This bond goes beyond definitions—here is to mutual care, holding space for each other, and walking side by side through life."
+        title: "To My Favorite Person & Partner!",
+        text: "This bond goes beyond standard definitions. Here is to mutual care, holding space for each other, and standing strong side-by-side through life."
       },
       friend: {
         title: "To My Chosen Family!",
-        text: "Distance or blood doesn't limit family. Thank you for always being there for me when it matters most!"
+        text: "Care and protection know no boundaries. Thank you for being someone I can always rely on!"
       }
     };
 
@@ -246,24 +191,40 @@
       document.getElementById('subtitle').innerText = `Special Rakhi Greeting for ${to}!`;
     }
 
-    function generateLink() {
+    function buildUrl() {
       const sender = document.getElementById('senderName').value.trim();
       const receiver = document.getElementById('receiverName').value.trim();
       const relation = document.getElementById('relation').value;
 
       if (!sender || !receiver) {
         alert("Please enter both your name and the receiver's name!");
-        return;
+        return null;
       }
 
       const baseUrl = window.location.href.split('?')[0];
-      const shareableUrl = `${baseUrl}?to=${encodeURIComponent(receiver)}&from=${encodeURIComponent(sender)}&rel=${encodeURIComponent(relation)}`;
+      return `${baseUrl}?to=${encodeURIComponent(receiver)}&from=${encodeURIComponent(sender)}&rel=${encodeURIComponent(relation)}`;
+    }
+
+    function copyLink() {
+      const shareableUrl = buildUrl();
+      if (!shareableUrl) return;
 
       navigator.clipboard.writeText(shareableUrl).then(() => {
         const toast = document.getElementById('toast');
         toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), 4000);
+        setTimeout(() => toast.classList.add('hidden'), 3000);
       });
+    }
+
+    function shareWhatsApp() {
+      const shareableUrl = buildUrl();
+      if (!shareableUrl) return;
+
+      const sender = document.getElementById('senderName').value.trim();
+      const receiver = document.getElementById('receiverName').value.trim();
+
+      const text = `Hey ${receiver}! 🧵✨ ${sender} sent you an interactive Raksha Bandhan greeting. Tap here to open & tie your Rakhi: ${shareableUrl}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     function tieRakhi() {
@@ -273,11 +234,22 @@
       const cardBody = document.getElementById('cardBody');
       const hintText = document.getElementById('hintText');
 
-      confetti({
-        particleCount: 130,
-        spread: 80,
-        origin: { y: 0.6 }
-      });
+      // Audio Sound Effect using Web Audio API (No external mp3 file needed)
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3); // A5
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+
+      // Confetti Blast
+      confetti({ particleCount: 140, spread: 85, origin: { y: 0.6 } });
 
       rakhiBtn.style.transform = 'scale(1.4) rotate(360deg)';
 
@@ -292,13 +264,10 @@
     }
 
     function enableCreateMode() {
-      // Hide receiver view and message, show generator form
       document.getElementById('receiverZone').classList.add('hidden');
       document.getElementById('messageCard').style.display = 'none';
       document.getElementById('senderForm').classList.remove('hidden');
-      document.getElementById('subtitle').innerText = "Create a personalized digital Rakhi link to share!";
-      
-      // Clear previous input fields
+      document.getElementById('subtitle').innerText = "Send a digital Rakhi & personalized message to anyone!";
       document.getElementById('senderName').value = '';
       document.getElementById('receiverName').value = '';
     }
