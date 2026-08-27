@@ -201,10 +201,10 @@
         </div>
 
         <select id="scratchReward">
-          <option value="☕ 1 Tapri Chai & Samosa Treat (On My Expense)!">☕ Tapri Chai & Samosa Treat</option>
-          <option value="🍕 1 Swiggy/Zomato Midnight Craving (My Expense)!">🍕 Swiggy/Zomato Midnight Craving</option>
-          <option value="🎟️ 1 Movie Night + Popcorn Treat (My Expense)!">🎟️ Movie Night + Popcorn Treat</option>
-          <option value="🧹 1-Week House Chores Pass (I Do Your Work)!">🧹 1-Week House Chores Exemption</option>
+          <option value="☕ 1 Coffee/Chai & Samosa Treat (My Treat)!">☕ Coffee/Chai & Samosa Treat</option>
+          <option value="🍕 1 Swiggy/Zomato Midnight Craving (My Treat)!">🍕 Swiggy/Zomato Midnight Craving</option>
+          <option value="🎟️ 1 Movie Night + Popcorn Treat (My Treat)!">🎟️ Movie Night + Popcorn Treat</option>
+          <option value="🧹 1-Week House Chores Pass (Treat)!">🧹 1-Week House Chores Exemption</option>
           <option value="🤫 1 Deepest Secret Saved Forever (No Judgments)!">🤫 Keep 1 Deepest Secret Safe</option>
         </select>
 
@@ -246,7 +246,7 @@
       </div>
 
       <button class="btn btn-download" id="downloadBtn" onclick="downloadCard()">Download Card Image 📸</button>
-      <button class="btn btn-secondary" id="createBtn" onclick="enableCreateMode()">Send One Back ✨</button>
+      <button class="btn btn-secondary" id="createBtn" onclick="enableCreateMode()">Send A Special Rakhi ✨</button>
     </div>
   </div>
 
@@ -305,7 +305,7 @@
     const rel = urlParams.get('rel') || 'sibling';
     const iconParam = urlParams.get('icon') || '🌸';
     const msgParam = urlParams.get('msg');
-    const rewardParam = urlParams.get('reward') || '☕ 1 Coffee/Chai & Samosa Treat (On My Expense)!';
+    const rewardParam = urlParams.get('reward') || '☕ 1 Coffee/Chai & Samosa Treat (My Treat)!';
 
     if (to && from) {
       document.getElementById('senderForm').classList.add('hidden');
