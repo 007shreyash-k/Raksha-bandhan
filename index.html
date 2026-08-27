@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Raksha Bandhan Digital Celebration</title>
+  <title>Raksha Bandhan Interactive Celebration</title>
   
+  <!-- Canvas Confetti & html2canvas CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -24,7 +27,6 @@
       position: relative;
     }
 
-    /* Floating Petals Ambient Background */
     .petal {
       position: absolute;
       background: rgba(255, 255, 255, 0.4);
@@ -64,17 +66,11 @@
       font-family: inherit;
       font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.2s ease;
     }
 
     input:focus, select:focus, textarea:focus { border-color: #d81b60; }
 
-    /* Style Selector */
-    .style-picker {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 6px;
-    }
+    .style-picker { display: flex; justify-content: space-around; margin-top: 6px; }
     .style-option {
       font-size: 2rem;
       cursor: pointer;
@@ -83,13 +79,8 @@
       border: 2px solid transparent;
       transition: all 0.2s ease;
     }
-    .style-option.selected {
-      border-color: #d81b60;
-      background: #fff0f5;
-      transform: scale(1.1);
-    }
+    .style-option.selected { border-color: #d81b60; background: #fff0f5; transform: scale(1.1); }
 
-    /* Rakhi Tying Area */
     .rakhi-zone { margin: 25px 0; }
     .rakhi-icon {
       font-size: 5rem;
@@ -120,6 +111,37 @@
     .message-box h2 { color: #c2185b; font-size: 1.3rem; margin-bottom: 10px; }
     .message-box p { font-size: 0.95rem; color: #444; line-height: 1.6; white-space: pre-line; }
 
+    /* Scratch Card Container */
+    .scratch-container {
+      position: relative;
+      width: 100%;
+      height: 110px;
+      margin: 18px 0;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+      border: 2px solid #ffd1dc;
+    }
+    .scratch-reveal-text {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      color: #d81b60;
+      font-weight: bold;
+      font-size: 1.05rem;
+      padding: 10px;
+    }
+    .scratch-canvas {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      cursor: pointer;
+      touch-action: none;
+    }
+
     .btn {
       background: #d81b60;
       color: white;
@@ -128,7 +150,7 @@
       border-radius: 20px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.1s ease;
+      transition: background 0.2s ease;
       font-size: 0.9rem;
       width: 100%;
       margin-top: 10px;
@@ -137,10 +159,10 @@
       align-items: center;
       gap: 8px;
     }
-    .btn:active { transform: scale(0.98); }
     .btn-whatsapp { background: #25D366; }
     .btn-whatsapp:hover { background: #1da851; }
-    .btn-secondary { background: #fff; color: #d81b60; border: 2px solid #d81b60; margin-top: 12px; }
+    .btn-secondary { background: #fff; color: #d81b60; border: 2px solid #d81b60; margin-top: 10px; }
+    .btn-download { background: #764ba2; color: #fff; margin-top: 10px; }
 
     .hidden { display: none !important; }
     .toast { color: #2e7d32; font-size: 0.85rem; margin-top: 8px; font-weight: 600; }
@@ -148,12 +170,11 @@
 </head>
 <body>
 
-  <!-- Floating Ambient Petals -->
   <div id="petals"></div>
 
-  <div class="card-container">
+  <div class="card-container" id="captureArea">
     <h1>Happy Raksha Bandhan 🧵✨</h1>
-    <p class="subtitle" id="subtitle">Send a digital Rakhi & special message to anyone!</p>
+    <p class="subtitle" id="subtitle">Send a digital Rakhi & scratch card to anyone!</p>
 
     <!-- SENDER FORM -->
     <div id="senderForm">
@@ -187,8 +208,18 @@
       </div>
 
       <div class="form-group">
-        <label for="customMsg">Personal Note (Optional):</label>
-        <textarea id="customMsg" rows="2" placeholder="Write your own custom note or leave blank for template..."></textarea>
+        <label for="scratchReward">Funny Scratch Card Promise 🎟️:</label>
+        <select id="scratchReward">
+          <option value="👑 1-Week Full Rights over the TV Remote!">👑 TV Remote Monopoly</option>
+          <option value="☕ 1 Free Coffee & Snack treat on me!">☕ Free Coffee & Treat</option>
+          <option value="🍕 1 Late Night Pizza order (My Expense)!">🍕 Late Night Pizza Treat</option>
+          <option value="🤫 I will keep 1 secret of yours safe forever!">🤫 Keep 1 Secret Safe</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="customMsg">Personal Message (Optional):</label>
+        <textarea id="customMsg" rows="2" placeholder="Write your own custom note..."></textarea>
       </div>
 
       <button class="btn btn-whatsapp" onclick="shareWhatsApp()">Send via WhatsApp 💬</button>
@@ -200,7 +231,7 @@
     <div id="receiverZone" class="hidden">
       <div class="rakhi-zone">
         <div class="rakhi-icon" id="rakhiBtn" onclick="tieRakhi()">🌸</div>
-        <p class="rakhi-hint" id="hintText">Tap the Rakhi to tie it & open your message!</p>
+        <p class="rakhi-hint" id="hintText">Tap the Rakhi to tie it & open your card!</p>
       </div>
     </div>
 
@@ -208,14 +239,25 @@
     <div class="message-box" id="messageCard">
       <h2 id="cardHeader"></h2>
       <p id="cardBody"></p>
-      <button class="btn btn-secondary" onclick="enableCreateMode()">Send one back or create your own ✨</button>
+
+      <!-- Scratch Card Component -->
+      <div class="scratch-container" id="scratchContainer">
+        <div class="scratch-reveal-text">
+          <span>🎁 Your Secret Promise:</span>
+          <span id="scratchText" style="font-size: 1.1rem; margin-top: 4px;"></span>
+        </div>
+        <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
+      </div>
+
+      <button class="btn btn-download" id="downloadBtn" onclick="downloadCard()">Download Card Image 📸</button>
+      <button class="btn btn-secondary" id="createBtn" onclick="enableCreateMode()">Send one back or create your own ✨</button>
     </div>
   </div>
 
   <script>
     let chosenIcon = '🌸';
 
-    // Ambient floating petals generator
+    // Ambient floating petals
     const petalsContainer = document.getElementById('petals');
     for (let i = 0; i < 12; i++) {
       const petal = document.createElement('div');
@@ -235,18 +277,9 @@
     }
 
     const defaultMessages = {
-      sibling: {
-        title: "To My Forever Support System!",
-        text: "Thank you for always standing by me, laughing through memories, and having my back. Happy Raksha Bandhan!"
-      },
-      partner: {
-        title: "To My Favorite Person & Partner!",
-        text: "This bond goes beyond standard definitions—here is to mutual care, holding space for each other, and walking side by side through life."
-      },
-      friend: {
-        title: "To My Chosen Family!",
-        text: "Care and protection know no boundaries. Thank you for being someone I can always rely on!"
-      }
+      sibling: { title: "To My Forever Support System!", text: "Thank you for always standing by me, laughing through memories, and having my back. Happy Raksha Bandhan!" },
+      partner: { title: "To My Favorite Person & Partner!", text: "This bond goes beyond standard definitions—here is to mutual care, holding space for each other, and walking side by side through life." },
+      friend: { title: "To My Chosen Family!", text: "Care and protection know no boundaries. Thank you for being someone I can always rely on!" }
     };
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -255,12 +288,14 @@
     const rel = urlParams.get('rel') || 'sibling';
     const iconParam = urlParams.get('icon') || '🌸';
     const msgParam = urlParams.get('msg');
+    const rewardParam = urlParams.get('reward') || '👑 1-Week Monopoly over TV Remote!';
 
     if (to && from) {
       document.getElementById('senderForm').classList.add('hidden');
       document.getElementById('receiverZone').classList.remove('hidden');
       document.getElementById('subtitle').innerText = `Special Rakhi Greeting for ${to}!`;
       document.getElementById('rakhiBtn').innerText = iconParam;
+      document.getElementById('scratchText').innerText = rewardParam;
     }
 
     function buildUrl() {
@@ -268,6 +303,7 @@
       const receiver = document.getElementById('receiverName').value.trim();
       const relation = document.getElementById('relation').value;
       const customMsg = document.getElementById('customMsg').value.trim();
+      const scratchReward = document.getElementById('scratchReward').value;
 
       if (!sender || !receiver) {
         alert("Please enter both your name and the receiver's name!");
@@ -275,7 +311,7 @@
       }
 
       const baseUrl = window.location.href.split('?')[0];
-      let url = `${baseUrl}?to=${encodeURIComponent(receiver)}&from=${encodeURIComponent(sender)}&rel=${encodeURIComponent(relation)}&icon=${encodeURIComponent(chosenIcon)}`;
+      let url = `${baseUrl}?to=${encodeURIComponent(receiver)}&from=${encodeURIComponent(sender)}&rel=${encodeURIComponent(relation)}&icon=${encodeURIComponent(chosenIcon)}&reward=${encodeURIComponent(scratchReward)}`;
       if (customMsg) url += `&msg=${encodeURIComponent(customMsg)}`;
       return url;
     }
@@ -295,14 +331,13 @@
       if (!url) return;
       const sender = document.getElementById('senderName').value.trim();
       const receiver = document.getElementById('receiverName').value.trim();
-      const text = `Hey ${receiver}! 🧵✨ ${sender} sent you an interactive Raksha Bandhan greeting. Tap here to tie your Rakhi: ${url}`;
+      const text = `Hey ${receiver}! 🧵✨ ${sender} sent you an interactive Raksha Bandhan greeting with a hidden scratch card. Tap here to open: ${url}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     function playSparkleSound() {
-      // Crystal chime sound via Web Audio API
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 arpeggio
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -316,6 +351,46 @@
       });
     }
 
+    function initScratchCard() {
+      const canvas = document.getElementById('scratchCanvas');
+      const ctx = canvas.getContext('2d');
+      const container = document.getElementById('scratchContainer');
+      
+      canvas.width = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+
+      // Draw Gold Foil Surface
+      ctx.fillStyle = '#d4af37';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = '600 14px Poppins';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText('Scratch here with your finger/mouse! 🪙', canvas.width / 2, canvas.height / 2 + 5);
+
+      let isDrawing = false;
+
+      function scratch(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
+      canvas.addEventListener('mousemove', scratch);
+      canvas.addEventListener('mouseup', () => isDrawing = false);
+
+      canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+      canvas.addEventListener('touchmove', scratch);
+      canvas.addEventListener('touchend', () => isDrawing = false);
+    }
+
     function tieRakhi() {
       const rakhiBtn = document.getElementById('rakhiBtn');
       const messageCard = document.getElementById('messageCard');
@@ -324,12 +399,7 @@
       const hintText = document.getElementById('hintText');
 
       playSparkleSound();
-
-      confetti({
-        particleCount: 150,
-        spread: 90,
-        origin: { y: 0.6 }
-      });
+      confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
 
       rakhiBtn.style.transform = 'scale(1.5) rotate(360deg)';
 
@@ -342,14 +412,37 @@
       setTimeout(() => {
         hintText.innerText = "✨ Rakhi Tied Successfully! ✨";
         messageCard.style.display = 'block';
+        initScratchCard();
       }, 400);
+    }
+
+    function downloadCard() {
+      const captureElement = document.getElementById('captureArea');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const createBtn = document.getElementById('createBtn');
+
+      // Temporarily hide action buttons during screenshot
+      downloadBtn.style.display = 'none';
+      createBtn.style.display = 'none';
+
+      html2canvas(captureElement, { scale: 2 }).then(canvas => {
+        const image = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = `Raksha_Bandhan_${to || 'Greeting'}.png`;
+        link.click();
+
+        // Restore action buttons
+        downloadBtn.style.display = 'flex';
+        createBtn.style.display = 'flex';
+      });
     }
 
     function enableCreateMode() {
       document.getElementById('receiverZone').classList.add('hidden');
       document.getElementById('messageCard').style.display = 'none';
       document.getElementById('senderForm').classList.remove('hidden');
-      document.getElementById('subtitle').innerText = "Send a digital Rakhi & special message to anyone!";
+      document.getElementById('subtitle').innerText = "Send a digital Rakhi & scratch card to anyone!";
       document.getElementById('senderName').value = '';
       document.getElementById('receiverName').value = '';
       document.getElementById('customMsg').value = '';
